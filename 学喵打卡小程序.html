@@ -1,0 +1,555 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--orange:#FF7A3D;--orange-light:#FFB088;--orange-pale:#FFF0E8;
+--yellow:#FFD166;--green:#06D6A0;--blue:#4895EF;
+--pink:#FF6B9D;--purple:#845EF7;
+--bg:#F8F6F3;--card:#FFFFFF;--text:#2D2416;--sub:#8A7E74;--border:#EDE8E3;
+--radius:16px;--font:'Nunito',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);width:390px;min-height:844px;overflow-x:hidden;}
+.phone{width:390px;min-height:844px;background:var(--bg);overflow:hidden;position:relative;}
+.screen{display:none;flex-direction:column;height:100%;min-height:820px;}
+.screen.active{display:flex;}
+.topbar{padding:52px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;}
+.btn-orange{background:var(--orange);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;}
+.tab-bar{position:fixed;bottom:0;left:0;width:390px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;height:72px;padding:0 8px;z-index:100;}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 4px;}
+.tab-icon{font-size:20px;}
+.tab-label{font-size:10px;color:var(--sub);font-weight:600;}
+.tab-item.active .tab-label{color:var(--orange);}
+.fab{width:52px;height:52px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(255,122,61,.4);margin-top:-16px;flex-shrink:0;}
+.content{flex:1;overflow-y:auto;padding:0 16px 90px;}
+.streak-banner{background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);border-radius:var(--radius);padding:18px;color:#fff;margin-bottom:12px;}
+.habit-card{background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.habit-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.habit-check{width:32px;height:32px;border-radius:50%;border:2.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;margin-left:auto;}
+.habit-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.cat-box{text-align:center;padding:16px 0;}
+.cat-emoji{font-size:64px;line-height:1;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.section-title{font-size:16px;font-weight:800;margin:16px 0 10px;display:flex;align-items:center;gap:6px;}
+.voice-btn{width:48px;height:48px;border-radius:50%;background:var(--orange);border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 14px rgba(255,122,61,.4);}
+.voice-btn.listening{animation:pulse-ring 1.2s ease-out infinite;}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(255,122,61,.5)}70%{box-shadow:0 0 0 20px rgba(255,122,61,0)}100%{box-shadow:0 0 0 0 rgba(255,122,61,0)}}
+.ai-msg{background:var(--orange-pale);border-radius:12px 12px 12px 0;padding:12px 14px;font-size:14px;line-height:1.6;max-width:80%;color:var(--text);}
+.user-msg{background:var(--orange);border-radius:12px 12px 0 12px;padding:12px 14px;font-size:14px;line-height:1.6;max-width:80%;color:#fff;margin-left:auto;}
+.msg-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:12px;}
+.msg-row.user{flex-direction:row-reverse;}
+.ai-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.suggest-chip{background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--text);}
+.typing-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;display:inline-block;animation:typing .8s ease-in-out infinite;}
+.typing-dot:nth-child(2){animation-delay:.15s;}
+.typing-dot:nth-child(3){animation-delay:.3s;}
+@keyframes typing{0%,60%,100%{transform:scale(1);opacity:.5}30%{transform:scale(1.3);opacity:1}}
+.schedule-card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.quadrant-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+.quadrant{border-radius:var(--radius);padding:14px;min-height:100px;}
+.q-title{font-size:11px;font-weight:800;margin-bottom:8px;}
+.q-task{background:#fff;border-radius:8px;padding:6px 10px;font-size:12px;margin-bottom:6px;border-left:3px solid;}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;}
+.stat-num{font-size:26px;font-weight:800;}
+.stat-label{font-size:11px;color:var(--sub);margin-top:2px;font-weight:600;}
+.achievement-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.ach-item{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.ach-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid var(--border);}
+.ach-badge.unlocked{border-color:var(--yellow);background:#FFF9E6;}
+.ach-badge.locked{opacity:.4;filter:grayscale(1);}
+.ach-name{font-size:10px;color:var(--sub);font-weight:600;text-align:center;}
+.input-box{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:14px;font-family:var(--font);width:100%;resize:none;outline:none;color:var(--text);}
+.input-box:focus{border-color:var(--orange);}
+.profile-header{background:linear-gradient(135deg,#FFF5F0 0%,#FFE8D6 100%);padding:52px 20px 20px;}
+.level-bar{height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden;}
+.level-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:3px;width:68%;}
+/* calendar */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;}
+.cal-header{font-size:11px;color:var(--sub);font-weight:700;padding:4px 0;}
+.cal-day{padding:8px 2px;font-size:14px;font-weight:700;color:var(--text);border-radius:10px;}
+.cal-day.today{background:var(--orange);color:#fff;}
+/* week bars */
+.week-bars-wrap{display:flex;align-items:flex-end;gap:8px;height:80px;margin:12px 0;}
+.week-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.week-bar-inner{width:100%;border-radius:6px;background:linear-gradient(180deg,var(--orange) 0%,var(--orange-light) 100%);}
+.week-day-label{font-size:10px;color:var(--sub);font-weight:600;}
+</style>
+
+<div class="phone" id="app">
+
+<!-- 打卡 -->
+<div class="screen active" id="screen-daka">
+  <div class="topbar">
+    <div>
+      <div style="font-size:12px;color:var(--sub);font-weight:600;">2026年04月27日</div>
+      <div style="font-size:22px;font-weight:800;">早安！☀️</div>
+    </div>
+    <div style="position:relative;cursor:pointer;" onclick="switchTab('ai')">
+      <div style="width:44px;height:44px;border-radius:12px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:26px;">🐱</div>
+      <div style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#FF3B30;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800;">3</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="streak-banner">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><div style="font-size:12px;opacity:.8;font-weight:600;">今日已坚持</div><div style="font-size:32px;font-weight:800;">128 <span style="font-size:16px;">分钟</span></div></div>
+        <div style="text-align:right;"><div style="font-size:12px;opacity:.8;font-weight:600;">完成率</div><div style="font-size:32px;font-weight:800;">75%</div></div>
+      </div>
+    </div>
+    <div onclick="switchTab('schedule')" style="background:var(--card);border-radius:var(--radius);padding:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;cursor:pointer;">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📅</span><span style="font-size:14px;font-weight:700;color:#FF3B30;">昨日有 1 个任务未打卡</span></div>
+      <span style="background:var(--orange-pale);color:var(--orange);font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;">去补卡</span>
+    </div>
+    <div class="section-title">⭐ 今日任务</div>
+    <div id="habits-list"></div>
+    <div style="background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;border:2px dashed var(--border);" onclick="switchTab('ai')">
+      <span style="font-size:14px;font-weight:700;color:var(--sub);">+ 添加更多好习惯</span>
+    </div>
+    <div class="cat-box">
+      <div class="cat-emoji">🐱</div>
+      <div id="cat-msg" style="font-size:13px;color:var(--sub);margin-top:8px;font-weight:600;">喵喵为你加油！继续努力～</div>
+    </div>
+  </div>
+</div>
+
+<!-- 日程 -->
+<div class="screen" id="screen-schedule">
+  <div class="topbar">
+    <div style="font-size:20px;font-weight:800;">2026年4月</div>
+    <div style="display:flex;gap:8px;"><span style="cursor:pointer;font-size:18px;color:var(--sub);">◀</span><span style="cursor:pointer;font-size:18px;color:var(--sub);">▶</span></div>
+  </div>
+  <div class="content">
+    <!-- 日历：用JS渲染避免模板字符串问题 -->
+    <div style="background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:14px;">
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div class="quadrant-grid">
+      <div class="quadrant" style="background:#FFF0F0;">
+        <div class="q-title" style="color:#E53E3E;">🔴 重要且紧急</div>
+        <div class="q-task" style="border-color:#E53E3E;">产品方案终审稿</div>
+        <div class="q-task" style="border-color:#E53E3E;">下午3点客户会议</div>
+      </div>
+      <div class="quadrant" style="background:#F0F0FF;">
+        <div class="q-title" style="color:#4895EF;">🔵 重要不紧急</div>
+        <div style="font-size:12px;color:var(--sub);font-style:italic;">暂无任务，休息一下喵～</div>
+      </div>
+      <div class="quadrant" style="background:#FFF8EC;">
+        <div class="q-title" style="color:#F6A623;">🟡 紧急不重要</div>
+        <div class="q-task" style="border-color:#F6A623;">回复社群消息</div>
+      </div>
+      <div class="quadrant" style="background:#F0FFF8;">
+        <div class="q-title" style="color:#06D6A0;">🟢 不紧急不重要</div>
+        <div class="q-task" style="border-color:#06D6A0;">挑选周末露营地</div>
+      </div>
+    </div>
+    <div class="section-title">今日流水线</div>
+    <div class="schedule-card">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--orange);margin-top:4px;flex-shrink:0;"></div>
+        <div><div style="font-size:11px;color:var(--sub);">09:00 - 10:30</div><div style="font-size:14px;font-weight:700;">深度工作：代码重构</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--green);margin-top:4px;flex-shrink:0;"></div>
+        <div><div style="font-size:11px;color:var(--sub);">11:00 - 11:30</div><div style="font-size:14px;font-weight:700;">高数第八章学习 ✓</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--border);margin-top:4px;flex-shrink:0;"></div>
+        <div><div style="font-size:11px;color:var(--sub);">15:00 - 16:00</div><div style="font-size:14px;font-weight:700;">客户会议</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 专注 -->
+<div class="screen" id="screen-focus">
+  <div style="background:var(--orange);min-height:100%;display:flex;flex-direction:column;padding-bottom:80px;">
+    <div style="padding:52px 16px 16px;display:flex;justify-content:center;gap:4px;" id="focus-tabs"></div>
+    <div style="display:flex;align-items:center;justify-content:center;flex:1;flex-direction:column;padding:20px;">
+      <div style="position:relative;width:220px;height:220px;margin-bottom:24px;">
+        <svg width="220" height="220" style="transform:rotate(-90deg)">
+          <circle cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/>
+          <circle cx="110" cy="110" r="100" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-dasharray="628" id="timer-circle" stroke-dashoffset="157"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-size:52px;font-weight:800;color:#fff;letter-spacing:-2px;" id="timer-display">25:00</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.8);font-weight:600;" id="focus-status">学习进行中</div>
+        </div>
+      </div>
+      <div style="background:rgba(0,0,0,.15);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px;font-size:52px;line-height:1;text-align:center;" id="focus-cat">😸</div>
+      <div style="background:var(--orange-light);border-radius:20px;padding:8px 20px;font-size:13px;color:#fff;font-weight:700;margin-bottom:24px;" id="focus-msg">喵喵也在陪你一起变强哦！</div>
+      <div style="display:flex;gap:16px;">
+        <button onclick="toggleTimer()" id="timer-btn" style="background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);border-radius:12px;padding:12px 28px;color:#fff;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;">⏸ 暂停</button>
+        <button onclick="resetTimer()" style="background:transparent;border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px 20px;color:rgba(255,255,255,.8);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;">重置</button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:24px;padding:0 20px 8px;">
+      <div style="color:rgba(255,255,255,.8);font-size:12px;">🎵 白噪音：林间雨</div>
+      <div style="color:rgba(255,255,255,.8);font-size:12px;">🔒 已锁定应用</div>
+    </div>
+  </div>
+</div>
+
+<!-- AI -->
+<div class="screen" id="screen-ai">
+  <div style="background:var(--card);border-bottom:1px solid var(--border);padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:20px;">🐱</div>
+      <div><div style="font-size:15px;font-weight:800;">AI 喵助手</div><div style="font-size:11px;color:var(--green);font-weight:600;">● 在线</div></div>
+    </div>
+    <div style="font-size:12px;color:var(--sub);cursor:pointer;" onclick="clearChat()">清空对话</div>
+  </div>
+  <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;padding-bottom:160px;"></div>
+  <div style="position:fixed;bottom:72px;left:0;width:390px;background:var(--card);border-top:1px solid var(--border);padding:12px 16px 8px;">
+    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;" id="suggest-chips"></div>
+    <div style="display:flex;align-items:flex-end;gap:10px;">
+      <textarea id="chat-input" class="input-box" rows="1" placeholder="我想..." style="flex:1;line-height:1.5;max-height:80px;" oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">🎤</button>
+      <button onclick="sendMsg()" style="width:48px;height:48px;border-radius:12px;background:var(--orange);border:none;color:#fff;font-size:22px;cursor:pointer;margin-bottom:2px;">↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- 我的 -->
+<div class="screen" id="screen-profile">
+  <div class="profile-header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:64px;height:64px;border-radius:50%;border:3px solid var(--orange);background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:36px;">🐱</div>
+      <div style="flex:1;">
+        <div style="font-size:20px;font-weight:800;">猫味少女Lily</div>
+        <div style="font-size:12px;color:var(--sub);">时间魔法师 Lv.15</div>
+        <div class="level-bar"><div class="level-fill"></div></div>
+      </div>
+      <span style="font-size:22px;cursor:pointer;">⚙️</span>
+    </div>
+  </div>
+  <div class="content" style="padding-top:14px;">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num" style="color:var(--orange);">42</div><div class="stat-label">连胜天数</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--blue);">356h</div><div class="stat-label">累计专注</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--green);">12</div><div class="stat-label">养成习惯</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--purple);">89%</div><div class="stat-label">本月完成率</div></div>
+    </div>
+    <div style="background:var(--card);border-radius:var(--radius);padding:16px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:800;margin-bottom:12px;">本周活力曲线</div>
+      <div class="week-bars-wrap" id="week-bars"></div>
+      <!-- 星期标签用JS渲染 -->
+      <div style="display:flex;gap:8px;" id="week-labels"></div>
+    </div>
+    <div class="section-title" style="justify-content:space-between;">
+      <span>成就勋章</span>
+      <span style="font-size:12px;color:var(--orange);font-weight:700;cursor:pointer;">查看全部喵</span>
+    </div>
+    <div class="achievement-grid">
+      <div class="ach-item"><div class="ach-badge unlocked">☀️</div><div class="ach-name">晨起鸟儿</div></div>
+      <div class="ach-item"><div class="ach-badge unlocked">⚡</div><div class="ach-name">效率达人</div></div>
+      <div class="ach-item"><div class="ach-badge locked">🔥</div><div class="ach-name">百日坚持</div></div>
+      <div class="ach-item"><div class="ach-badge unlocked">💖</div><div class="ach-name">爱喵使者</div></div>
+      <div class="ach-item"><div class="ach-badge locked">🏆</div><div class="ach-name">专注大师</div></div>
+      <div class="ach-item"><div class="ach-badge unlocked">📚</div><div class="ach-name">学习达人</div></div>
+      <div class="ach-item"><div class="ach-badge locked">🌙</div><div class="ach-name">夜猫子</div></div>
+      <div class="ach-item"><div class="ach-badge locked">💪</div><div class="ach-name">健身狂人</div></div>
+    </div>
+    <div style="background:var(--card);border-radius:var(--radius);padding:14px;margin-top:14px;">
+      <div style="font-size:14px;font-weight:800;margin-bottom:12px;">AI 喵助手洞察</div>
+      <div style="background:var(--orange-pale);border-radius:10px;padding:12px;font-size:13px;color:var(--text);line-height:1.6;">
+        🐱 你在<b>工作日上午9-11点</b>专注效率最高，建议将重要任务安排在这个时段。本周连续打卡天数比上周提升了23%，喵喵为你骄傲！
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item active" id="tab-daka" onclick="switchTab('daka')">
+    <span class="tab-icon">🏠</span><span class="tab-label">打卡</span>
+  </div>
+  <div class="tab-item" id="tab-schedule" onclick="switchTab('schedule')">
+    <span class="tab-icon">📅</span><span class="tab-label">日程</span>
+  </div>
+  <div class="fab" onclick="switchTab('ai')">+</div>
+  <div class="tab-item" id="tab-focus" onclick="switchTab('focus')">
+    <span class="tab-icon">⏰</span><span class="tab-label">专注</span>
+  </div>
+  <div class="tab-item" id="tab-profile" onclick="switchTab('profile')">
+    <span class="tab-icon">👤</span><span class="tab-label">我的</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ---- 日历渲染（纯JS，避免模板字符串乱码）----
+function renderCalendar() {
+  var grid = document.getElementById('cal-grid');
+  if (!grid) return;
+  var days = ['一','二','三','四','五','六','日'];
+  var dates = [20,21,22,23,24,25,26];
+  var html = '';
+  days.forEach(function(d) {
+    html += '<div class="cal-header">' + d + '</div>';
+  });
+  dates.forEach(function(d) {
+    if (d === 27) {
+      html += '<div class="cal-day today">' + d + '</div>';
+    } else {
+      html += '<div class="cal-day">' + d + '</div>';
+    }
+  });
+  grid.innerHTML = html;
+}
+
+// ---- 周柱状图渲染 ----
+function renderWeekBars() {
+  var data = [110, 190, 140, 70, 60, 100, 120];
+  var labels = ['周一','周二','周三','周四','周五','周六','周日'];
+  var max = Math.max.apply(null, data);
+  var wrap = document.getElementById('week-bars');
+  var labWrap = document.getElementById('week-labels');
+  if (!wrap || !labWrap) return;
+  var barsHtml = '';
+  var labsHtml = '';
+  data.forEach(function(v, i) {
+    var h = Math.round(v / max * 64);
+    barsHtml += '<div class="week-bar-col"><div class="week-bar-inner" style="height:' + h + 'px;"></div></div>';
+    labsHtml += '<div style="flex:1;text-align:center;font-size:10px;color:var(--sub);font-weight:600;">' + labels[i] + '</div>';
+  });
+  wrap.innerHTML = barsHtml;
+  labWrap.innerHTML = labsHtml;
+}
+
+// ---- 专注模式 ----
+var focusModes = [
+  {label:'番茄钟', sec:1500, status:'学习进行中', cats:['😸','😺','🙀'], msg:'喵喵也在陪你一起变强哦！'},
+  {label:'深度专注', sec:2700, status:'深度专注中', cats:['😼','😽','🐱'], msg:'深呼吸，专注在当下～'},
+  {label:'正念猫喵', sec:300, status:'正念冥想中', cats:['😻','😾','🐈'], msg:'放松心情，感受当下喵～'}
+];
+var focusMode = 0, timerSec = 1500, timerRunning = false, timerInterval = null;
+
+function renderFocusTabs() {
+  var wrap = document.getElementById('focus-tabs');
+  if (!wrap) return;
+  var html = '';
+  focusModes.forEach(function(m, i) {
+    var active = i === focusMode;
+    html += '<div onclick="setFocusMode(' + i + ')" style="flex:1;padding:8px;text-align:center;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;' +
+      (active ? 'background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);color:#fff;' : 'background:transparent;border:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);') +
+      '">' + m.label + '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function setFocusMode(i) {
+  focusMode = i;
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSec = focusModes[i].sec;
+  var btn = document.getElementById('timer-btn');
+  if (btn) btn.textContent = '▶ 开始';
+  var st = document.getElementById('focus-status');
+  if (st) st.textContent = focusModes[i].status;
+  var msg = document.getElementById('focus-msg');
+  if (msg) msg.textContent = focusModes[i].msg;
+  renderFocusTabs();
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  var m = Math.floor(timerSec / 60), s = timerSec % 60;
+  var disp = document.getElementById('timer-display');
+  if (disp) disp.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  var total = focusModes[focusMode].sec;
+  var prog = (total - timerSec) / total;
+  var circ = document.getElementById('timer-circle');
+  if (circ) circ.style.strokeDashoffset = 628 * (1 - prog);
+  var cats = focusModes[focusMode].cats;
+  var catEl = document.getElementById('focus-cat');
+  if (catEl) catEl.textContent = prog < 0.33 ? cats[0] : prog < 0.66 ? cats[1] : cats[2];
+}
+
+function toggleTimer() {
+  var btn = document.getElementById('timer-btn');
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    if (btn) btn.textContent = '▶ 继续';
+    var st = document.getElementById('focus-status'); if (st) st.textContent = '已暂停';
+  } else {
+    timerRunning = true;
+    if (btn) btn.textContent = '⏸ 暂停';
+    var st2 = document.getElementById('focus-status'); if (st2) st2.textContent = focusModes[focusMode].status;
+    timerInterval = setInterval(function() {
+      if (timerSec > 0) { timerSec--; updateTimerUI(); }
+      else { clearInterval(timerInterval); timerRunning = false; if (btn) btn.textContent = '✓ 完成'; var st3 = document.getElementById('focus-status'); if (st3) st3.textContent = '专注完成！'; }
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  timerSec = focusModes[focusMode].sec;
+  var btn = document.getElementById('timer-btn'); if (btn) btn.textContent = '▶ 开始';
+  var st = document.getElementById('focus-status'); if (st) st.textContent = focusModes[focusMode].status;
+  updateTimerUI();
+}
+
+// ---- 习惯 ----
+var HABITS = [
+  {id:1, icon:'🏆', bg:'#E8F4FD', name:'晨起一杯水', time:'07:00-08:30', streak:21, done:true},
+  {id:2, icon:'📖', bg:'#FFF0E8', name:'高数第八章学习', time:'08:00-09:00', streak:0, done:false, type:'focus'},
+  {id:3, icon:'🧪', bg:'#F0E8FF', name:'实验室打卡', time:'10:00 · 地点：低碳院', streak:0, done:false}
+];
+
+function renderHabits() {
+  var list = document.getElementById('habits-list');
+  if (!list) return;
+  var html = '';
+  HABITS.forEach(function(h) {
+    html += '<div class="habit-card">' +
+      '<div class="habit-icon" style="background:' + h.bg + '">' + h.icon + '</div>' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:15px;font-weight:700;">' + h.name + '</div>' +
+        '<div style="font-size:12px;color:var(--sub);">' + h.time + (h.streak > 0 ? ' · 连续' + h.streak + '天' : '') + '</div>' +
+      '</div>';
+    if (h.type === 'focus') {
+      html += '<button onclick="switchTab(\'focus\')" style="background:var(--orange-pale);color:var(--orange);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;">▶</button>';
+    } else {
+      html += '<div class="habit-check ' + (h.done ? 'done' : '') + '" onclick="toggleHabit(' + h.id + ')">' + (h.done ? '✓' : '') + '</div>';
+    }
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function toggleHabit(id) {
+  var h = HABITS.find(function(x) { return x.id === id; });
+  if (!h) return;
+  h.done = !h.done;
+  if (h.done) h.streak++; else if (h.streak > 0) h.streak--;
+  renderHabits();
+  var msg = document.getElementById('cat-msg');
+  if (msg) msg.textContent = h.done ? '🎉 太棒了！' + h.name + '打卡成功！连续' + h.streak + '天～' : '没关系，明天继续加油喵！';
+}
+
+// ---- AI 对话 ----
+var chatHistory = [];
+var listening = false;
+var SYSTEM_PROMPT = '你是"学喵打卡"App的AI喵助手，一只聪明可爱的猫咪助理。你的任务是帮助用户管理时间、制定习惯计划、分解目标。\n回答风格：亲切活泼，偶尔用"喵"结尾，用思维链方式帮用户把大目标拆解为具体的每日任务，给出具体可执行的建议，适当引用用户数据（连续42天、专注356小时、完成率89%）来个性化建议。每次回复控制在150字以内，精简有力。\n用户数据：连胜42天，累计专注356小时，养成12个习惯，本月完成率89%。';
+var suggestions = ['帮我制定学习计划','我想养成早起习惯','如何提高专注力','给我分析本周数据'];
+
+function renderSuggestions() {
+  var sc = document.getElementById('suggest-chips');
+  if (!sc) return;
+  var html = '';
+  suggestions.forEach(function(s) {
+    html += '<button class="suggest-chip" onclick="sendQuickMsg(\'' + s + '\')">' + s + '</button>';
+  });
+  sc.innerHTML = html;
+}
+
+function addMsg(role, content, typing) {
+  var msgs = document.getElementById('chat-messages');
+  if (!msgs) return null;
+  var div = document.createElement('div');
+  div.className = 'msg-row' + (role === 'user' ? ' user' : '');
+  if (role === 'assistant') {
+    var id = 'msg-' + Date.now();
+    div.innerHTML = '<div class="ai-avatar">🐱</div><div class="ai-msg" id="' + id + '">' +
+      (typing ? '<span><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span>' : content) +
+      '</div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return document.getElementById(id);
+  } else {
+    div.innerHTML = '<div class="user-msg">' + content + '</div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return null;
+  }
+}
+
+async function callAI(userMsg) {
+  chatHistory.push({role:'user', content:userMsg});
+  var typingEl = addMsg('assistant', '', true);
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+    var data = await resp.json();
+    var reply = (data.content && data.content[0]) ? data.content[0].text : '喵～网络有点不稳定，请再试一次吧！';
+    if (typingEl) typingEl.innerHTML = reply.replace(/\n/g, '<br>');
+    chatHistory.push({role:'assistant', content:reply});
+  } catch(e) {
+    if (typingEl) typingEl.textContent = '喵～连接出了小问题，请检查网络再试哦！';
+  }
+}
+
+function sendMsg() {
+  var inp = document.getElementById('chat-input');
+  var msg = (inp.value || '').trim();
+  if (!msg) return;
+  inp.value = ''; inp.style.height = 'auto';
+  addMsg('user', msg);
+  callAI(msg);
+  var sc = document.getElementById('suggest-chips'); if (sc) sc.innerHTML = '';
+}
+
+function sendQuickMsg(msg) {
+  addMsg('user', msg);
+  callAI(msg);
+  var sc = document.getElementById('suggest-chips'); if (sc) sc.innerHTML = '';
+}
+
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 80) + 'px'; }
+
+function toggleVoice() {
+  var btn = document.getElementById('voice-btn');
+  listening = !listening;
+  if (listening) { btn.classList.add('listening'); btn.textContent = '🔴'; }
+  else { btn.classList.remove('listening'); btn.textContent = '🎤'; }
+  setTimeout(function() {
+    if (listening) {
+      listening = false;
+      if (btn) { btn.classList.remove('listening'); btn.textContent = '🎤'; }
+      var inp = document.getElementById('chat-input');
+      if (inp) { inp.value = '帮我制定明天的学习计划'; }
+    }
+  }, 2000);
+}
+
+function clearChat() {
+  chatHistory = [];
+  var msgs = document.getElementById('chat-messages'); if (msgs) msgs.innerHTML = '';
+  initChat();
+}
+
+function initChat() {
+  setTimeout(function() {
+    addMsg('assistant', '喵～你好！我是AI喵助手 🐱 你的专属时间管理小助手。今天想一起完成什么目标呢？');
+    renderSuggestions();
+  }, 300);
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.tab-item').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('screen-' + name).classList.add('active');
+  var ti = document.getElementById('tab-' + name); if (ti) ti.classList.add('active');
+}
+
+// 初始化
+renderCalendar();
+renderWeekBars();
+renderHabits();
+renderFocusTabs();
+updateTimerUI();
+initChat();
+</script>
