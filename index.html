@@ -68,7 +68,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 .user-msg{background:var(--orange);border-radius:12px 12px 0 12px;padding:12px 14px;font-size:14px;line-height:1.6;max-width:80%;color:#fff;margin-left:auto;}
 .msg-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:12px;}
 .msg-row.user{flex-direction:row-reverse;}
-.ai-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-pale) url('assets/xuemiao-celebrate.png') center/92% no-repeat;display:flex;align-items:center;justify-content:center;font-size:0;flex-shrink:0;}
+.ai-avatar{width:32px;height:32px;border-radius:50%;background:var(--orange-pale) url('assets/xuemiao-ai.png') center/92% no-repeat;display:flex;align-items:center;justify-content:center;font-size:0;flex-shrink:0;}
 .suggest-chip{background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--text);}
 .typing-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;display:inline-block;animation:typing .8s ease-in-out infinite;}
 .typing-dot:nth-child(2){animation-delay:.15s;}
@@ -120,7 +120,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
       <div id="greeting-label" style="font-size:24px;font-weight:800;letter-spacing:-.4px;"></div>
     </div>
     <div style="position:relative;cursor:pointer;" onclick="switchTab('ai')">
-      <div style="width:44px;height:44px;border-radius:12px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;"><img src="assets/xuemiao-celebrate.png" alt="AI 学喵入口" style="width:40px;height:40px;object-fit:contain;"></div>
+      <div style="width:44px;height:44px;border-radius:12px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;"><img src="assets/xuemiao-ai.png" alt="AI 学喵入口" style="width:40px;height:40px;object-fit:contain;"></div>
       <div style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#FF3B30;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800;">3</div>
     </div>
   </div>
@@ -211,7 +211,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
           <div style="font-size:13px;color:rgba(255,255,255,.8);font-weight:600;" id="focus-status">学习进行中</div>
         </div>
       </div>
-      <div style="background:rgba(0,0,0,.12);border-radius:var(--radius);padding:8px 20px;margin-bottom:16px;line-height:1;text-align:center;" id="focus-cat"><img class="focus-cat-art" src="assets/xuemiao-celebrate.png" alt="陪伴专注的学喵"></div>
+      <div style="background:rgba(0,0,0,.12);border-radius:var(--radius);padding:8px 20px;margin-bottom:16px;line-height:1;text-align:center;" id="focus-cat"><img class="focus-cat-art" src="assets/xuemiao-focus.png" alt="伏案专注的学喵"></div>
       <div style="background:var(--orange-light);border-radius:20px;padding:8px 20px;font-size:13px;color:#fff;font-weight:700;margin-bottom:24px;" id="focus-msg">喵喵也在陪你一起变强哦！</div>
       <div style="display:flex;gap:16px;">
         <button onclick="toggleTimer()" id="timer-btn" style="background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);border-radius:12px;padding:12px 28px;color:#fff;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;">⏸ 暂停</button>
@@ -229,7 +229,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 <div class="screen" id="screen-ai">
   <div style="background:var(--card);border-bottom:1px solid var(--border);padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;"><img src="assets/xuemiao-celebrate.png" alt="AI 学喵" style="width:34px;height:34px;object-fit:contain;"></div>
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;"><img src="assets/xuemiao-ai.png" alt="AI 思考学喵" style="width:34px;height:34px;object-fit:contain;"></div>
       <div><div style="font-size:15px;font-weight:800;">AI 喵助手</div><div style="font-size:11px;color:var(--green);font-weight:600;">● 在线</div></div>
     </div>
     <div style="font-size:12px;color:var(--sub);cursor:pointer;" onclick="clearChat()">清空对话</div>
@@ -249,7 +249,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 <div class="screen" id="screen-profile">
   <div class="profile-header">
     <div style="display:flex;align-items:center;gap:14px;">
-      <img src="assets/xuemiao-celebrate.png" alt="学喵头像" style="width:64px;height:64px;border-radius:50%;border:3px solid var(--orange);background:var(--orange-pale);object-fit:cover;">
+      <img src="assets/xuemiao-profile.png" alt="奖牌学喵头像" style="width:64px;height:64px;border-radius:50%;border:3px solid var(--orange);background:var(--orange-pale);object-fit:cover;">
       <div style="flex:1;">
         <div style="font-size:20px;font-weight:800;">猫味少女Lily</div>
         <div style="font-size:12px;color:var(--sub);">时间魔法师 Lv.15</div>
