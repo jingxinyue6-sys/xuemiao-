@@ -50,6 +50,15 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 .habit-check.done{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 5px 12px rgba(92,206,179,.25);}
 .cat-box{text-align:center;padding:18px 12px;margin-top:12px;background:linear-gradient(135deg,#FFF9DB,#FFF0B9);border-radius:24px;box-shadow:0 8px 22px rgba(213,176,62,.08);}
 .cat-emoji{font-size:64px;line-height:1;animation:float 3s ease-in-out infinite;}
+.cat-art{width:112px;height:112px;object-fit:contain;display:block;margin:0 auto;filter:drop-shadow(0 10px 12px rgba(71,83,139,.14));animation:float 3s ease-in-out infinite;}
+.cat-art.small{width:58px;height:58px;margin:0;}
+.date-strip{display:flex;gap:9px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 12px;scrollbar-width:none;touch-action:pan-x;}
+.date-strip::-webkit-scrollbar{display:none}.date-pill{min-width:58px;padding:9px 5px;border:0;background:#fff;border-radius:17px;box-shadow:0 5px 16px rgba(76,88,142,.07);scroll-snap-align:center;color:var(--sub);font-family:var(--font);cursor:pointer}.date-pill strong,.date-pill span{display:block}.date-pill strong{font-size:17px;color:var(--text);margin-top:2px}.date-pill.active{background:var(--orange);color:#fff;transform:translateY(-2px)}.date-pill.active strong{color:#fff}
+.icon-btn{border:0;background:var(--orange-pale);color:var(--orange);border-radius:12px;padding:9px 12px;font:700 14px var(--font);cursor:pointer}.danger-btn{background:#FFF0F0;color:#D9485F}
+.toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);width:max-content;max-width:330px;background:#28304A;color:#fff;padding:11px 16px;border-radius:14px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:300}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(26,32,55,.32);display:flex;align-items:flex-end;justify-content:center;z-index:250;backdrop-filter:blur(3px)}.modal-sheet{width:390px;background:#fff;border-radius:28px 28px 0 0;padding:22px 20px 28px;box-shadow:0 -20px 60px rgba(30,37,65,.2)}.form-label{display:block;font-size:12px;color:var(--sub);font-weight:800;margin:12px 0 6px}.form-row{display:flex;gap:9px}.form-row>*{flex:1}.modal-actions{display:flex;gap:9px;margin-top:18px}.modal-actions button{flex:1}
+.habit-card{position:relative}.habit-menu{border:0;background:transparent;color:var(--sub);font-size:20px;cursor:pointer;padding:4px}.schedule-card.clickable{cursor:pointer;transition:.2s}.schedule-card.clickable:active{transform:scale(.985)}
+.voice-hint{font-size:11px;color:var(--sub);margin:6px 0 0 2px}.voice-btn.unsupported{background:#A4AAC0;box-shadow:none}.focus-cat-art{width:128px;height:128px;object-fit:contain;filter:drop-shadow(0 10px 18px rgba(22,33,82,.25))}.sound-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:14px;padding:8px 12px;font:700 12px var(--font);cursor:pointer}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .section-title{font-size:17px;font-weight:800;margin:18px 2px 11px;display:flex;align-items:center;gap:6px;color:#343B58;}
 .voice-btn{width:48px;height:48px;border-radius:50%;background:var(--orange);border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 14px rgba(255,122,61,.4);}
@@ -107,8 +116,8 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
   <div class="topbar">
     <div>
       <div class="brand-lockup"><span class="brand-mark">🐾</span><span class="brand-name">学了吗</span></div>
-      <div style="font-size:12px;color:var(--sub);font-weight:600;">2026年04月27日</div>
-      <div style="font-size:24px;font-weight:800;letter-spacing:-.4px;">早安，今天学了吗？</div>
+      <div id="today-label" style="font-size:12px;color:var(--sub);font-weight:600;"></div>
+      <div id="greeting-label" style="font-size:24px;font-weight:800;letter-spacing:-.4px;"></div>
     </div>
     <div style="position:relative;cursor:pointer;" onclick="switchTab('ai')">
       <div style="width:44px;height:44px;border-radius:12px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:26px;">🐱</div>
@@ -116,23 +125,24 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
     </div>
   </div>
   <div class="content">
+    <div class="date-strip" id="date-strip" aria-label="选择打卡日期"></div>
     <div class="streak-banner">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div><div style="font-size:12px;opacity:.8;font-weight:600;">今日已坚持</div><div style="font-size:32px;font-weight:800;">128 <span style="font-size:16px;">分钟</span></div></div>
         <div style="text-align:right;"><div style="font-size:12px;opacity:.8;font-weight:600;">完成率</div><div style="font-size:32px;font-weight:800;">75%</div></div>
       </div>
     </div>
-    <div onclick="switchTab('schedule')" style="background:#FFF8D9;border-radius:22px;padding:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;cursor:pointer;box-shadow:0 8px 20px rgba(208,174,60,.08);">
-      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📅</span><span style="font-size:14px;font-weight:700;color:#FF3B30;">昨日有 1 个任务未打卡</span></div>
+    <div id="makeup-banner" onclick="goYesterday()" style="background:#FFF8D9;border-radius:22px;padding:14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;cursor:pointer;box-shadow:0 8px 20px rgba(208,174,60,.08);">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">📅</span><span id="makeup-text" style="font-size:14px;font-weight:700;color:#FF3B30;"></span></div>
       <span style="background:var(--orange-pale);color:var(--orange);font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;">去补卡</span>
     </div>
     <div class="section-title">⭐ 今日任务</div>
     <div id="habits-list"></div>
-    <div style="background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;border:2px dashed var(--border);" onclick="switchTab('ai')">
+    <div style="background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;border:2px dashed var(--border);" onclick="openHabitModal()">
       <span style="font-size:14px;font-weight:700;color:var(--sub);">+ 添加更多好习惯</span>
     </div>
     <div class="cat-box">
-      <div class="cat-emoji">🐱</div>
+      <img class="cat-art" src="assets/xuemiao-celebrate.png" alt="学喵庆祝打卡">
       <div id="cat-msg" style="font-size:13px;color:var(--sub);margin-top:8px;font-weight:600;">喵喵为你加油！继续努力～</div>
     </div>
   </div>
@@ -141,8 +151,8 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 <!-- 日程 -->
 <div class="screen" id="screen-schedule">
   <div class="topbar">
-    <div style="font-size:20px;font-weight:800;">2026年4月</div>
-    <div style="display:flex;gap:8px;"><span style="cursor:pointer;font-size:18px;color:var(--sub);">◀</span><span style="cursor:pointer;font-size:18px;color:var(--sub);">▶</span></div>
+    <div id="calendar-title" style="font-size:20px;font-weight:800;"></div>
+    <div style="display:flex;gap:8px;"><button class="icon-btn" onclick="changeMonth(-1)" aria-label="上个月">◀</button><button class="icon-btn" onclick="goToday()">今天</button><button class="icon-btn" onclick="changeMonth(1)" aria-label="下个月">▶</button></div>
   </div>
   <div class="content">
     <!-- 日历：用JS渲染避免模板字符串问题 -->
@@ -169,7 +179,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
       </div>
     </div>
     <div class="section-title">今日流水线</div>
-    <div class="schedule-card">
+    <div class="schedule-card" id="schedule-list">
       <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
         <div style="width:10px;height:10px;border-radius:50%;background:var(--orange);margin-top:4px;flex-shrink:0;"></div>
         <div><div style="font-size:11px;color:var(--sub);">09:00 - 10:30</div><div style="font-size:14px;font-weight:700;">深度工作：代码重构</div></div>
@@ -201,7 +211,7 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
           <div style="font-size:13px;color:rgba(255,255,255,.8);font-weight:600;" id="focus-status">学习进行中</div>
         </div>
       </div>
-      <div style="background:rgba(0,0,0,.15);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px;font-size:52px;line-height:1;text-align:center;" id="focus-cat">😸</div>
+      <div style="background:rgba(0,0,0,.12);border-radius:var(--radius);padding:8px 20px;margin-bottom:16px;line-height:1;text-align:center;" id="focus-cat"><img class="focus-cat-art" src="assets/xuemiao-celebrate.png" alt="陪伴专注的学喵"></div>
       <div style="background:var(--orange-light);border-radius:20px;padding:8px 20px;font-size:13px;color:#fff;font-weight:700;margin-bottom:24px;" id="focus-msg">喵喵也在陪你一起变强哦！</div>
       <div style="display:flex;gap:16px;">
         <button onclick="toggleTimer()" id="timer-btn" style="background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);border-radius:12px;padding:12px 28px;color:#fff;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;">⏸ 暂停</button>
@@ -209,8 +219,8 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
       </div>
     </div>
     <div style="display:flex;justify-content:center;gap:24px;padding:0 20px 8px;">
-      <div style="color:rgba(255,255,255,.8);font-size:12px;">🎵 白噪音：林间雨</div>
-      <div style="color:rgba(255,255,255,.8);font-size:12px;">🔒 已锁定应用</div>
+      <button class="sound-btn" id="sound-btn" onclick="toggleWhiteNoise()">🎵 白噪音：关</button>
+      <div style="color:rgba(255,255,255,.8);font-size:12px;">🌐 网页专注模式</div>
     </div>
   </div>
 </div>
@@ -239,13 +249,13 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 <div class="screen" id="screen-profile">
   <div class="profile-header">
     <div style="display:flex;align-items:center;gap:14px;">
-      <div style="width:64px;height:64px;border-radius:50%;border:3px solid var(--orange);background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:36px;">🐱</div>
+      <img src="assets/xuemiao-celebrate.png" alt="学喵头像" style="width:64px;height:64px;border-radius:50%;border:3px solid var(--orange);background:var(--orange-pale);object-fit:cover;">
       <div style="flex:1;">
         <div style="font-size:20px;font-weight:800;">猫味少女Lily</div>
         <div style="font-size:12px;color:var(--sub);">时间魔法师 Lv.15</div>
         <div class="level-bar"><div class="level-fill"></div></div>
       </div>
-      <span style="font-size:22px;cursor:pointer;">⚙️</span>
+      <span style="font-size:22px;cursor:pointer;" onclick="openSettings()">⚙️</span>
     </div>
   </div>
   <div class="content" style="padding-top:14px;">
@@ -577,5 +587,6 @@ renderFocusTabs();
 updateTimerUI();
 initChat();
 </script>
+<script src="app.js"></script>
 </body>
 </html>
