@@ -78,7 +78,13 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 .quadrant-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
 .quadrant{border-radius:var(--radius);padding:14px;min-height:100px;}
 .q-title{font-size:11px;font-weight:800;margin-bottom:8px;}
-.q-task{background:#fff;border-radius:8px;padding:6px 10px;font-size:12px;margin-bottom:6px;border-left:3px solid;}
+.q-task{background:#fff;border-radius:10px;padding:7px 8px;font-size:12px;margin-bottom:6px;border-left:3px solid;display:flex;gap:6px;align-items:flex-start;box-shadow:0 3px 10px rgba(55,64,101,.04)}
+.q-task.done .q-task-text{text-decoration:line-through;opacity:.5}.q-task-check{width:18px;height:18px;border-radius:6px;border:1.5px solid currentColor;background:transparent;cursor:pointer;flex:0 0 auto;color:inherit}.q-task.done .q-task-check{background:currentColor}.q-task-text{flex:1;line-height:1.35;word-break:break-word}.q-task-delete{border:0;background:transparent;color:var(--sub);cursor:pointer;font-size:14px;padding:0}.q-add{width:100%;border:1.5px dashed currentColor;background:rgba(255,255,255,.45);border-radius:9px;padding:6px;font:700 11px var(--font);cursor:pointer;opacity:.72}.q-empty{font-size:11px;color:var(--sub);font-style:italic;margin:5px 0 8px}
+.day-planner{background:linear-gradient(135deg,#EEF1FF,#fff);border:1px solid #E0E5FF;border-radius:22px;padding:14px;margin-bottom:12px}.day-planner-title{font-size:15px;font-weight:800}.quick-task-row{display:flex;gap:8px;margin-top:10px}.quick-task-row .input-box{padding:10px 12px}.smart-tip{background:linear-gradient(135deg,#FFF7D7,#FFFDF4);border-radius:18px;padding:12px 13px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}.smart-tip-icon{font-size:20px}.smart-tip-copy{flex:1;font-size:12px;line-height:1.5;color:#5D5872}.smart-tip button{border:0;background:#fff;color:var(--orange);border-radius:12px;padding:7px 9px;font:800 11px var(--font);cursor:pointer;white-space:nowrap}.cal-day{position:relative}.cal-dot{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--green)}.cal-day.today .cal-dot{background:#fff}.cal-day.has-many:after{content:'';position:absolute;left:calc(50% + 5px);bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--pink)}
+.focus-shell{min-height:100%;display:flex;flex-direction:column;padding-bottom:80px;position:relative;overflow:hidden;transition:background .45s ease}.focus-shell:before,.focus-shell:after{position:absolute;pointer-events:none;z-index:0;transition:.45s}.focus-shell>*{position:relative;z-index:1}.focus-shell.theme-pomodoro{background:linear-gradient(155deg,#F58BAC 0%,#EE6F89 52%,#F9A98E 100%)}.focus-shell.theme-pomodoro:before{content:'🍅';font-size:100px;right:-16px;top:105px;opacity:.18;transform:rotate(14deg)}.focus-shell.theme-pomodoro:after{content:'🍅';font-size:54px;left:12px;bottom:145px;opacity:.14;transform:rotate(-18deg)}
+.focus-shell.theme-deep{background:radial-gradient(circle at 15% 20%,rgba(111,138,255,.45),transparent 32%),linear-gradient(155deg,#26325F,#344A93 58%,#192547)}.focus-shell.theme-deep:before{content:'✦  ·  ✶';font-size:54px;letter-spacing:18px;right:-10px;top:130px;color:#DDE6FF;opacity:.25}.focus-shell.theme-deep:after{content:'☾';font-size:95px;left:-8px;bottom:130px;color:#AFC3FF;opacity:.16}
+.focus-shell.theme-mindful{background:radial-gradient(circle at 80% 18%,rgba(255,255,255,.3),transparent 25%),linear-gradient(155deg,#74CDB4,#55B79D 55%,#3B8E7B)}.focus-shell.theme-mindful:before{content:'🍃';font-size:92px;right:-5px;top:115px;opacity:.18;transform:rotate(18deg)}.focus-shell.theme-mindful:after{content:'〜';font-size:130px;left:-10px;bottom:135px;color:#D7FFF2;opacity:.14;transform:rotate(-10deg)}
+.focus-mode-badge{color:#fff;font-size:12px;font-weight:800;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.14);border-radius:16px;padding:7px 12px;margin-bottom:14px;backdrop-filter:blur(8px)}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
 .stat-card{background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;}
 .stat-num{font-size:26px;font-weight:800;}
@@ -159,23 +165,30 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
     <div style="background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:14px;">
       <div class="cal-grid" id="cal-grid"></div>
     </div>
+    <div class="day-planner">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div><div class="day-planner-title" id="schedule-day-title">今日要做</div><div id="schedule-day-count" style="font-size:11px;color:var(--sub);margin-top:2px;"></div></div>
+        <button class="icon-btn" onclick="openScheduleTaskModal()">+详细安排</button>
+      </div>
+      <div class="quick-task-row"><input class="input-box" id="quick-task-input" maxlength="40" placeholder="输入要做的事…" onkeydown="handleQuickTaskKey(event)"><button class="btn-orange" style="padding:10px 14px;white-space:nowrap;" onclick="quickAddScheduleTask()">加入</button></div>
+    </div>
+    <div class="smart-tip" id="schedule-smart-tip"></div>
     <div class="quadrant-grid">
-      <div class="quadrant" style="background:#FFF0F0;">
+      <div class="quadrant" data-quadrant="q1" style="background:#FFF0F0;color:#E53E3E;">
         <div class="q-title" style="color:#E53E3E;">🔴 重要且紧急</div>
-        <div class="q-task" style="border-color:#E53E3E;">产品方案终审稿</div>
-        <div class="q-task" style="border-color:#E53E3E;">下午3点客户会议</div>
+        <div class="q-list" id="quadrant-q1"></div><button class="q-add" onclick="openScheduleTaskModal('q1')">+ 添加</button>
       </div>
-      <div class="quadrant" style="background:#F0F0FF;">
+      <div class="quadrant" data-quadrant="q2" style="background:#F0F0FF;color:#4895EF;">
         <div class="q-title" style="color:#4895EF;">🔵 重要不紧急</div>
-        <div style="font-size:12px;color:var(--sub);font-style:italic;">暂无任务，休息一下喵～</div>
+        <div class="q-list" id="quadrant-q2"></div><button class="q-add" onclick="openScheduleTaskModal('q2')">+ 添加</button>
       </div>
-      <div class="quadrant" style="background:#FFF8EC;">
+      <div class="quadrant" data-quadrant="q3" style="background:#FFF8EC;color:#F6A623;">
         <div class="q-title" style="color:#F6A623;">🟡 紧急不重要</div>
-        <div class="q-task" style="border-color:#F6A623;">回复社群消息</div>
+        <div class="q-list" id="quadrant-q3"></div><button class="q-add" onclick="openScheduleTaskModal('q3')">+ 添加</button>
       </div>
-      <div class="quadrant" style="background:#F0FFF8;">
+      <div class="quadrant" data-quadrant="q4" style="background:#F0FFF8;color:#06A880;">
         <div class="q-title" style="color:#06D6A0;">🟢 不紧急不重要</div>
-        <div class="q-task" style="border-color:#06D6A0;">挑选周末露营地</div>
+        <div class="q-list" id="quadrant-q4"></div><button class="q-add" onclick="openScheduleTaskModal('q4')">+ 添加</button>
       </div>
     </div>
     <div class="section-title">今日流水线</div>
@@ -198,9 +211,10 @@ body{font-family:var(--font);background:radial-gradient(circle at 12% 8%,#E1E9FF
 
 <!-- 专注 -->
 <div class="screen" id="screen-focus">
-  <div style="background:var(--orange);min-height:100%;display:flex;flex-direction:column;padding-bottom:80px;">
+  <div class="focus-shell theme-pomodoro" id="focus-shell">
     <div style="padding:52px 16px 16px;display:flex;justify-content:center;gap:4px;" id="focus-tabs"></div>
     <div style="display:flex;align-items:center;justify-content:center;flex:1;flex-direction:column;padding:20px;">
+      <div class="focus-mode-badge" id="focus-mode-badge">🍅 25 分钟冲刺 · 专注一件事</div>
       <div style="position:relative;width:220px;height:220px;margin-bottom:24px;">
         <svg width="220" height="220" style="transform:rotate(-90deg)">
           <circle cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/>
